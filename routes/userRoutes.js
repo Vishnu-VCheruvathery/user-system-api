@@ -152,7 +152,7 @@ router.get('/users/team/:id', async(req,res) => {
   try {
        const team = await teamModel.find(id).populate({
         path: 'team',
-        select: 'first_name last_name domain available', // Specify the fields you want to select
+        select: 'first_name last_name domain available avatar' , // Specify the fields you want to select
       })
       
        
