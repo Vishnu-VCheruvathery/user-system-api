@@ -158,10 +158,10 @@ router.get('/users/team/:id', async(req,res) => {
         select: 'first_name last_name domain available avatar' , // Specify the fields you want to select
       })
       if(team[0].team.length === 0){
-        res.status(404).json({error:'There are no users in this team'})
+        return res.json({ error: 'There are no users in this team' });
       }
      
-      res.json(team)
+     return res.json(team)
    
    
     
