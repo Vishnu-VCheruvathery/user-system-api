@@ -157,6 +157,9 @@ router.get('/users/team/:id', async(req,res) => {
         path: 'team',
         select: 'first_name last_name domain available avatar' , // Specify the fields you want to select
       })
+      if(!team){
+        return res.json({ error: 'There is no team with that id' });
+      }
       if(team[0].team.length === 0){
         return res.json({ error: 'There are no users in this team' });
       }
