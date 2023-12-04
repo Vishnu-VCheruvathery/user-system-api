@@ -55,7 +55,7 @@ router.get('/users', async (req, res) => {
 
 router.post('/users', async(req,res) => {
     const {id, first, last,email,gender,avatar,domain,available} = req.body
-    console.log(req.body)
+
     try {
         const user = new UserModel({
            id: id,
@@ -77,7 +77,7 @@ router.post('/users', async(req,res) => {
 
 router.delete('/users/:id', async(req,res) => {
   const {id: id} = req.params
-  console.log(id)
+
   try {
     const user = await UserModel.findByIdAndDelete(id)
     
@@ -117,7 +117,7 @@ router.put('/users/:id', async (req, res) => {
 
 router.post('/users/team', async (req, res) => {
   const {id, userId } = req.body;
-  console.log(req.body);
+ 
   try {
     // Convert teamId to an integer
     const teamIdInt = parseInt(id, 10);
@@ -148,15 +148,47 @@ router.post('/users/team', async (req, res) => {
 });
 
 router.get('/users/team/:id', async(req,res) => {
-    const {id} = req.params.id
+    const {id} = req.params
+ 
   try {
-       const team = await teamModel.findOne({ team_id: id }).populate({
+   
+       const teamIdInt = parseInt(id, 10);
+       const team = await teamModel.find({ team_id: teamIdInt }).populate({
         path: 'team',
         select: 'first_name last_name domain available avatar' , // Specify the fields you want to select
       })
-      
-       
-       res.json(team)
+      if(team[0].team.length === 0){
+        res.status(404).json({error:'There are no users in this team'})
+      }
+     
+      res.json(team)
+   
+   
+    
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+router.delete('/users/team/:id/:userId', async(req,res) => {
+    const {id, userId} = req.params
+   
+  try {
+          // Convert teamId to an integer
+    const teamIdInt = parseInt(id, 10);
+
+    // Find the team by ID
+    let team = await teamModel.findOne({ team_id: teamIdInt });
+    if(team){
+      team = await teamModel.findByIdAndUpdate(team._id,
+        {$pull: {team: userId}}
+        )
+    }else{
+      res.status(401).json({message: 'Sorry no team found by that id'})
+    }
+
+    
+    res.json(team)
   } catch (error) {
     console.log(error)
   }
