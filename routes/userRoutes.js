@@ -175,7 +175,7 @@ router.get('/users/team/:id', async(req,res) => {
 
 router.delete('/users/team/:id/:userId', async(req,res) => {
     const {id, userId} = req.params
-   
+   console.log(req.params)
   try {
           // Convert teamId to an integer
     const teamIdInt = parseInt(id, 10);
@@ -186,12 +186,12 @@ router.delete('/users/team/:id/:userId', async(req,res) => {
       team = await teamModel.findByIdAndUpdate(team._id,
         {$pull: {team: userId}}
         )
-    }else{
-      res.status(401).json({message: 'Sorry no team found by that id'})
-    }
 
-    
-    res.json(team)
+        return res.json({message: 'User deleted'})
+    }if(!team){
+     return res.status(401).json({error: 'Sorry no team found by that id'})
+    }
+    return res.json(team)
   } catch (error) {
     console.log(error)
   }
