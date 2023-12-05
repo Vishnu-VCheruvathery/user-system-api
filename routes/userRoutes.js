@@ -46,6 +46,10 @@ router.get('/users', async (req, res) => {
         .skip((page - 1) * pageSize)
         .limit(pageSize);
   
+        if(users.length === 0){
+          return res.json({error: 'No User found'})
+        }
+
       res.json(users);
     } catch (error) {
       console.log(error);
@@ -80,7 +84,6 @@ router.delete('/users/:id', async(req,res) => {
 
   try {
     const user = await UserModel.findByIdAndDelete(id)
-    
     res.status(201).json({message: 'User Deleted'})
   } catch (error) {
     console.log(error)
@@ -151,7 +154,10 @@ router.get('/users/team/:id', async(req,res) => {
     const {id} = req.params
  
   try {
-   
+
+       if (isNaN(id)) {
+          return res.json({ error: 'Only numbers are allowed' });
+       }
        const teamIdInt = parseInt(id, 10);
        const team = await teamModel.find({ team_id: teamIdInt }).populate({
         path: 'team',
@@ -202,12 +208,14 @@ router.get('/users/find', async(req,res) => {
     const searchTerm = req.query.name
 
     if(!searchTerm){
-      return res.status(400).json({ error: 'Search term is required' });
+      return res.json({ error: 'Search term is required' });
     }
 
     const regex = new RegExp(searchTerm, 'i');
     const response = await UserModel.find({ first_name: { $regex: regex } });
-
+    if(response.length === 0){
+      return res.json({error: 'Sorry there is no user with that name'})
+    }
     res.json(response);
   } catch (error) {
     console.log(error)
