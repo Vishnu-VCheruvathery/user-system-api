@@ -131,7 +131,18 @@ router.post('/users/team', async (req, res) => {
     // Convert teamId to an integer
     const teamIdInt = parseInt(id, 10);
 
-    // ... rest of your code
+     const team = await teamModel.find({ team_id: teamIdInt }).populate({
+        path: 'team',
+        select: 'first_name last_name domain available avatar' , // Specify the fields you want to select
+      })
+      if(team.length === 0){
+        return res.json({ error: 'There is no team with that id' });
+      }
+      if(team[0].team.length === 0){
+        return res.json({ error: 'There are no users in this team' });
+      }
+     
+     return res.json(team)
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: 'Internal server error' });
