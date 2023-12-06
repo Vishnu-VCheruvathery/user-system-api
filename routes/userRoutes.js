@@ -127,6 +127,11 @@ router.post('/users/team', async (req, res) => {
  
   try {
     // Convert teamId to an integer
+
+     if(isNaN(id)){
+      return res.json("Only Numbers are allowed")
+     }
+
     const teamIdInt = parseInt(id, 10);
 
     // Find the team by ID
