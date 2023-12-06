@@ -123,37 +123,24 @@ router.put('/users/:id', async (req, res) => {
 });
 
 router.post('/users/team', async (req, res) => {
-  const {id, userId } = req.body;
- 
+  const { id, userId } = req.body;
+
+  // Check if id is a valid number
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Only numbers are allowed for id' });
+  }
+
   try {
     // Convert teamId to an integer
-
     const teamIdInt = parseInt(id, 10);
 
-    // Find the team by ID
-    let team = await teamModel.findOne({ team_id: teamIdInt });
-    if (!team) {
-      // If team not found, create a new one
-      team = new teamModel({
-        team_id: teamIdInt,
-        team: [userId]
-      });
-    } else {
-      // If team found, update it
-      team = await teamModel.findByIdAndUpdate(
-        team._id,
-        { $push: { team: userId } },
-        { new: true } // Return the updated document
-      );
-    }
-
-    await team.save();
-    res.status(201).json({ message: 'User Added to Team' });
+    // ... rest of your code
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 router.get('/users/team/:id', async(req,res) => {
     const {id} = req.params
