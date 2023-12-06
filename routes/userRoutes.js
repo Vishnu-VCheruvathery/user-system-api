@@ -30,14 +30,15 @@ router.get('/users', async (req, res) => {
   
       // Build the filter object based on the provided criteria
       const filter = {};
+  
       if (domain) {
-        filter.domain = domain;
+        filter.domain = { $regex: new RegExp(domain, 'i') }; // Case-insensitive regex for domain
       }
       if (availability !== undefined) {
         filter.available = availability === 'true'; // Convert the string to a boolean
       }
       if (gender) {
-        filter.gender = gender;
+        filter.gender = { $regex: new RegExp(gender, 'i') }; // Case-insensitive regex for gender
       }
   
       // Use the filter object in the query
@@ -46,10 +47,10 @@ router.get('/users', async (req, res) => {
         .skip((page - 1) * pageSize)
         .limit(pageSize);
   
-        if(users.length === 0){
-          return res.json({error: 'No User found'})
-        }
-
+      if (users.length === 0) {
+        return res.json({ error: 'No User found' });
+      }
+  
       res.json(users);
     } catch (error) {
       console.log(error);
