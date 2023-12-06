@@ -20,25 +20,7 @@ router.get('/users', async (req, res) => {
     }
   });
 
-// router.get('/users/:id', async(req,res) => {
-//   try {
-//     const {id} = req.params
-//     if(isNaN(id)){
-//       return res.json({error: 'Only numbers are allowed as ID'})
-//     }
 
-//     const user = await UserModel.find({id})
-
-//     if(user.length === 0){
-//       return res.json({error: 'No user found'})
-//     }
-
-//     res.json(user)
-//   } catch (error) {
-//       console.log(error)
-//       res.json(error)    
-//   }
-// })
 
 
   router.get('/users/filtered-users', async (req, res) => {
