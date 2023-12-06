@@ -125,10 +125,7 @@ router.put('/users/:id', async (req, res) => {
 router.post('/users/team', async (req, res) => {
   const { id, userId } = req.body;
 
-  // Check if id is a valid number
-  if (isNaN(id)) {
-    return res.status(400).json({ error: 'Only numbers are allowed for id' });
-  }
+  
 
   try {
     // Convert teamId to an integer
