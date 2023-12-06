@@ -38,7 +38,7 @@ router.get('/users', async (req, res) => {
         filter.available = availability === 'true'; // Convert the string to a boolean
       }
       if (gender) {
-        filter.gender = gender[0].toUpperCase() + gender.slice(1); // Case-insensitive regex for gender
+        filter.gender = gender[0].toUpperCase() + gender.slice(1).toLowerCase(); // Case-insensitive regex for gender
       }
   
       // Use the filter object in the query
